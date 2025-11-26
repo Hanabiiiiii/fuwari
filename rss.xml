@@ -168,7 +168,7 @@ sfc /scannow
 &lt;img src=&quot;https://blog.2b2x.cn/_astro/warden-worker-3.Bwq2gftN_1GvOfa.webp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 &lt;p&gt;点击创建令牌
 &lt;img src=&quot;https://blog.2b2x.cn/_astro/warden-worker-4.CXnYi37b_V06LC.webp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-&lt;p&gt;选择 编辑Cloudflare Workers 并添加 &lt;strong&gt;编辑D1数据库&lt;/strong&gt;
+&lt;p&gt;选择 编辑Cloudflare Workers
 &lt;img src=&quot;https://blog.2b2x.cn/_astro/warden-worker-5.Da5URiyY_ZFM06I.webp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 &lt;p&gt;创建后 &lt;strong&gt;复制API 令牌&lt;/strong&gt; （只会展示一次）（CLOUDFLARE_API_TOKEN）
 &lt;img src=&quot;https://blog.2b2x.cn/_astro/warden-worker-6.BzWSUX2a_1MMeV7.webp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
@@ -181,7 +181,7 @@ sfc /scannow
 &lt;p&gt;由于原项目坑点太多（如：依赖不固定版本导致编译报错，必须设置的环境变量不写白，SQL初始化遇到问题直接跳过）&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;这里我Fork并二改了一个我的版本，跟着我的步骤走，包你成功！&lt;/p&gt;
-&lt;p&gt;Fork我的仓库（别忘了点个 &lt;strong&gt;Star&lt;/strong&gt; ） &lt;a href=&quot;https://github.com/afoim/warden-worker/&quot;&gt;afoim/warden-worker: A Bitwarden-compatible server for Cloudflare Workers&lt;/a&gt; &lt;strong&gt;目前部署方式有大的改动，建议参照README&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Fork我的仓库（别忘了点个 &lt;strong&gt;Star&lt;/strong&gt; ） &lt;a href=&quot;https://github.com/afoim/warden-worker/&quot;&gt;afoim/warden-worker: A Bitwarden-compatible server for Cloudflare Workers&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;在仓库设置中添加上述三个机密环境变量&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;&lt;code&gt;CLOUDFLARE_ACCOUNT_ID&lt;/code&gt;&lt;/li&gt;
@@ -1506,9 +1506,10 @@ pip install oci requests
 &lt;p&gt;&lt;s&gt;门户里面的API端点： https://hpic.072103.xyz https://vpic.072103.xyz （CF Worker）&lt;/s&gt;&lt;/p&gt;
 &lt;p&gt;博客用的API端点： https://eopfapi.2b2x.cn/pic?img=ua （EdgeOne Pages Functions）&lt;/p&gt;
 &lt;h1&gt;新版实现&lt;/h1&gt;
-&lt;p&gt;图源存放在 cnb.cool ，如 https://cnb.cool/2x.nz/r3/-/git/raw/main/ri/h/1.webp 。分为横屏和竖屏随机图，统一重命名为 &lt;code&gt;数字.webp&lt;/code&gt; ，如 &lt;code&gt;2333.webp&lt;/code&gt; 。关于重命名插件的编写，可以参阅：&lt;a href=&quot;/posts/rename/&quot;&gt;这里&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;EdgeOne Pages Functions作为入口，当收到请求后首先区分 横屏、竖屏、自适应，即 &lt;code&gt;?img=h&lt;/code&gt; &lt;code&gt;?img=v&lt;/code&gt; &lt;code&gt;?img=ua&lt;/code&gt; ，然后内部随机出一个数字，最大值在代码中硬编码并且代理请求 https://cnb.cool/2x.nz/r3/-/git/raw/main/ri/h|v/*.webp ，其中，代理请求设置一个独特的 &lt;code&gt;Accept&lt;/code&gt; 请求头来绕过防盗链。从而使客户端能得到正确的图片响应，关于更多详情，请参考源码： &lt;a href=&quot;https://github.com/afoim/EdgeOne_Function_PicAPI/blob/main/functions/pic.js&quot;&gt;EdgeOne_Function_PicAPI/functions/pic.js at main · afoim/EdgeOne_Function_PicAPI&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;图源存放EdgeOne Page，EdgeOne Pages Functions作为入口，当收到请求后首先区分 横屏、竖屏、自适应，即 &lt;code&gt;?img=h&lt;/code&gt; &lt;code&gt;?img=v&lt;/code&gt; &lt;code&gt;?img=ua&lt;/code&gt; ，随后返回其内部存储的相应图片，关于更多详情，请参考源码： &lt;a href=&quot;https://github.com/afoim/EdgeOne_Function_PicAPI/blob/main/functions/pic.js&quot;&gt;EdgeOne_Function_PicAPI/functions/pic.js at main · afoim/EdgeOne_Function_PicAPI&lt;/a&gt;&lt;/p&gt;
 &lt;h1&gt;旧版实现&lt;/h1&gt;
+&lt;p&gt;利用 cnb.cool 存储图片eopf做中间代理&lt;/p&gt;
+&lt;h1&gt;旧旧版实现&lt;/h1&gt;
 &lt;blockquote&gt;
 &lt;p&gt;在Cloudflare R2被刷了 &lt;strong&gt;7千万次（GET）请求&lt;/strong&gt; 并且扣款 &lt;strong&gt;28.08 USD（折合人民币 207.93 CNY）&lt;/strong&gt; 后废弃&lt;/p&gt;
 &lt;/blockquote&gt;
