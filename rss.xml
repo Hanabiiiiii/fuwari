@@ -13,6 +13,64 @@
 &lt;p&gt;粉丝自建&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;&lt;a href=&quot;https://t.me/blog2x&quot;&gt;Telegram: View @blog2x&lt;/a&gt;&lt;/p&gt;
+</content:encoded></item><item><title>Umami Cloud迁移到本地踩坑记录</title><link>https://2x.nz/posts/umami-migration/</link><guid isPermaLink="true">https://2x.nz/posts/umami-migration/</guid><description>早期的我很有先见之明，在使用Umami的时候是自建的，但是不久后因为想要全上云，又用回了Umami Cloud，但是现在访问记录激增，我又不得不迁移到本地...</description><pubDate>Fri, 05 Dec 2025 10:13:34 GMT</pubDate><content:encoded>&lt;h1&gt;正式开始&lt;/h1&gt;
+&lt;p&gt;首先，我们想要迁移，首先肯定是要拿到原来的Umami Cloud存放的数据&lt;/p&gt;
+&lt;p&gt;在 &lt;a href=&quot;https://cloud.umami.is/settings/data&quot;&gt;Umami Cloud Data | Settings&lt;/a&gt; 中，我们可以选择，导出数据（Export）
+&lt;img src=&quot;https://2x.nz/_astro/umami-migration-1.uJp6pug6_Z2dPWKT.webp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;当数据准备好后（几分钟左右），你的邮箱会收到一封Umami Cloud发来的邮件
+&lt;img src=&quot;https://2x.nz/_astro/umami-migration-2.DTZD0voa_ZIy5uL.webp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;下载下来的文件是一个以UUID命名的ZIP压缩包，将其解压可以得到3个CSV文件
+&lt;img src=&quot;https://2x.nz/_astro/umami-migration-3.BnW3znWh_Z29WB9Q.webp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;其中，只有 &lt;code&gt;website_event.csv&lt;/code&gt; 有用，其他两个文件仅有表头，无数据&lt;/p&gt;
+&lt;p&gt;这样，我们就成功拿到了旧Umami数据&lt;/p&gt;
+&lt;p&gt;接下来，我们需要在本地部署Umami PostgreSQL版本的 &lt;strong&gt;最新版&lt;/strong&gt; （目前版本为 3.x）（部署教程略）&lt;/p&gt;
+&lt;p&gt;然后我们还需要安装一个CSV编辑软件： &lt;a href=&quot;https://smoothcsv.com/&quot;&gt;SmoothCSV - The ultimate CSV editor for macOS &amp;amp; Windows&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;在本地Umami中新建一个网站，Umami会随机为你生成一个UUID&lt;/p&gt;
+&lt;p&gt;接下来我们需要在你的终端安装一个图形化管理PostgreSQL的软件： &lt;a href=&quot;https://www.pgadmin.org/&quot;&gt;pgAdmin - PostgreSQL Tools&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;然后连上数据库，你将可以看到这些表
+&lt;img src=&quot;https://2x.nz/_astro/umami-migration-4.Bf_6rmGu_ZvokVq.webp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;接下来我们查看 &lt;code&gt;website&lt;/code&gt; 这张表，将 &lt;code&gt;website_event.csb&lt;/code&gt; 打开，查看旧的 &lt;code&gt;website_id&lt;/code&gt; 将新的ID改为旧的，这样才能数据匹配
+&lt;img src=&quot;https://2x.nz/_astro/umami-migration-5.BwVUMKHi_Z11A0sU.webp&quot; alt=&quot;&quot; /&gt;
+&lt;img src=&quot;https://2x.nz/_astro/umami-migration-6.BIWQqR3J_2uBfYL.webp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;接下来，我们正式开始数据导入，由于导入后的数据有两个 &lt;code&gt;session_id&lt;/code&gt; 字段，而在Umami自我管理的过程中这个 &lt;code&gt;session_id&lt;/code&gt; 字段是 &lt;strong&gt;唯一约束的&lt;/strong&gt; ，我们需要先解除这个限制，在正式上线前还要再加回这个限制（后面会说）&lt;/p&gt;
+&lt;p&gt;让我们删除主键约束和索引&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;ALTER TABLE session DROP CONSTRAINT session_pkey;
+DROP INDEX session_session_id_key;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;接下来，我们需要将数据配对，我们先查看 &lt;code&gt;website_event.csv&lt;/code&gt; 这张表。这里应该只有表头，没有数据（我有是因为我已经导入完成了，教程是后写的）&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;注意顺序&lt;/strong&gt; 如： &lt;code&gt;event_id&lt;/code&gt; &lt;code&gt;website_id&lt;/code&gt; &lt;code&gt;session_id&lt;/code&gt; ...&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://2x.nz/_astro/umami-migration-7.BoFsUvCG_20JrBp.webp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;编辑CSV文件，你需要将顺序配对，并且删除表中没有的列，如： &lt;code&gt;browser&lt;/code&gt; &lt;code&gt;os&lt;/code&gt; ...
+&lt;img src=&quot;https://2x.nz/_astro/umami-migration-8.y76uzC9T_1qdE1t.webp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;确保数据库中的表头顺序和CSV文件中的表头顺序一一对应，顺序一致，不多不少后，&lt;strong&gt;Ctrl + S 保存&lt;/strong&gt; CSV文件，我们开始导入并在选项中勾选 &lt;strong&gt;标题&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;https://2x.nz/_astro/umami-migration-9.CsvUdMnd_ZftW0S.webp&quot; alt=&quot;&quot; /&gt;
+&lt;img src=&quot;https://2x.nz/_astro/umami-migration-10.COtfjwPj_ZvcwQb.webp&quot; alt=&quot;&quot; /&gt;
+&lt;img src=&quot;https://2x.nz/_astro/umami-migration-11.-MojYeeV_Z1gKR7G.webp&quot; alt=&quot;&quot; /&gt;
+导入成功后如图
+&lt;img src=&quot;https://2x.nz/_astro/umami-migration-12.D-xPsgmz_ZtxXlw.webp&quot; alt=&quot;&quot; /&gt;
+&lt;img src=&quot;https://2x.nz/_astro/umami-migration-13.50Z2eTBd_250rjd.webp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;再编辑 &lt;code&gt;session&lt;/code&gt; 这张表，手法同上，导入成功后如图
+&lt;img src=&quot;https://2x.nz/_astro/umami-migration-14.u-CrUDDg_1rGQJj.webp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;接下来打开本地Umami的WebUI，查看数据是否有异常
+&lt;img src=&quot;https://2x.nz/_astro/umami-migration-15.B8e8TWGj_Z15wFCY.webp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;确保导入后数据无异常后，我们开始删除另一条 &lt;code&gt;session_id&lt;/code&gt; 记录并回锁主键。否则上线后Umami将无法再向表中插入数据&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;SELECT session_id, COUNT(*) 
+FROM public.session
+GROUP BY session_id
+HAVING COUNT(*) &amp;gt; 1;
+
+-- 保留最早的 created_at
+DELETE FROM public.session
+WHERE ctid NOT IN (
+    SELECT MIN(ctid)
+    FROM public.session
+    GROUP BY session_id
+);
+
+ALTER TABLE public.session
+ADD CONSTRAINT session_id_unique UNIQUE (session_id);
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;至此，迁移工作结束&lt;/p&gt;
 </content:encoded></item><item><title>上手米哈游AI，然后把它逆了！</title><link>https://2x.nz/posts/anuneko/</link><guid isPermaLink="true">https://2x.nz/posts/anuneko/</guid><description>AnuNeko是一只会哈气的橘猫...其实不是，AnuNeko是由米哈游创始人做的AI大模型，会哈气。于是便做个QQBot给群友玩</description><pubDate>Tue, 02 Dec 2025 09:11:40 GMT</pubDate><content:encoded>&lt;h1&gt;这是What&lt;/h1&gt;
 &lt;p&gt;这是橘猫，会哈气（见封面&lt;/p&gt;
 &lt;p&gt;你可以前往 &lt;a href=&quot;https://anuneko.com/#/chat&quot;&gt;AnuNeko&lt;/a&gt; 逗猫&lt;/p&gt;
