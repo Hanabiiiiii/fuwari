@@ -154,7 +154,7 @@ ADD CONSTRAINT session_id_unique UNIQUE (session_id);
 &lt;p&gt;支持非常多的语言，如 Node.js、Python、Go、Wasm 等等。构建服务非常强劲！&lt;strong&gt;默认分配 4C8G&lt;/strong&gt; 帮你构建！&lt;/p&gt;
 &lt;p&gt;用量限制非常宽松，并且可以超过限制的 &lt;strong&gt;2倍&lt;/strong&gt; 以上仍保持正常访问
 &lt;img src=&quot;https://acofork.com/_astro/serverless-function-1.BOmSui9j_Z23tizV.webp&quot; alt=&quot;&quot; /&gt;
-示例服务： &lt;a href=&quot;https://blog.2b2x.cn/posts/onedrive-index/&quot;&gt;来！让我们用Vercel来分享你的OneDrive！ - AcoFork Blog&lt;/a&gt;&lt;/p&gt;
+示例服务： &lt;a href=&quot;/posts/onedrive-index/&quot;&gt;来！让我们用Vercel来分享你的OneDrive！ - AcoFork Blog&lt;/a&gt;&lt;/p&gt;
 &lt;h3&gt;&lt;a href=&quot;https://www.netlify.com/platform/core/functions/&quot;&gt;Netlify Functions&lt;/a&gt;&lt;/h3&gt;
 &lt;p&gt;支持 JS/TS 和 Go。用量限制更宽松！仅限制每个月100G传输流量，但是一旦超限，即刻宕机&lt;/p&gt;
 &lt;p&gt;示例服务： https://nf-gh.072103.xyz/afoim&lt;/p&gt;
@@ -359,8 +359,8 @@ sfc /scannow
 &lt;ul&gt;
 &lt;li&gt;https://cloud.umami.is/script.js ：Umami官方的全局JS，注入在所有页面中，用于后续将访客行为告知给Umami&lt;/li&gt;
 &lt;li&gt;http://localhost:4321/js/umami-share.js ：之前写的中间件，用于避免多次请求Umami拿全局Token&lt;/li&gt;
-&lt;li&gt;https://umami.2b2x.cn/analytics/us/api/websites/5d710dbd-3a2e-43e3-a553-97b415090c63/stats?startAt=0&amp;amp;endAt=1763429011353&amp;amp;unit=hour&amp;amp;timezone=Asia%2FShanghai&amp;amp;compare=false ：获取全站统计信息。为什么在文章页也会获取全站统计？因为全站统计被安放在用户配置块，而用户配置块全局可见&lt;/li&gt;
-&lt;li&gt;https://umami.2b2x.cn/analytics/us/api/websites/5d710dbd-3a2e-43e3-a553-97b415090c63/stats?startAt=0&amp;amp;endAt=1763429243350&amp;amp;unit=hour&amp;amp;timezone=Asia%2FShanghai&amp;amp;path=eq.%2Fposts%2Fswup-js%2F&amp;amp;compare=false ：获取本页统计信息&lt;/li&gt;
+&lt;li&gt;https://umami.acofork.com/analytics/us/api/websites/5d710dbd-3a2e-43e3-a553-97b415090c63/stats?startAt=0&amp;amp;endAt=1763429011353&amp;amp;unit=hour&amp;amp;timezone=Asia%2FShanghai&amp;amp;compare=false ：获取全站统计信息。为什么在文章页也会获取全站统计？因为全站统计被安放在用户配置块，而用户配置块全局可见&lt;/li&gt;
+&lt;li&gt;https://umami.acofork.com/analytics/us/api/websites/5d710dbd-3a2e-43e3-a553-97b415090c63/stats?startAt=0&amp;amp;endAt=1763429243350&amp;amp;unit=hour&amp;amp;timezone=Asia%2FShanghai&amp;amp;path=eq.%2Fposts%2Fswup-js%2F&amp;amp;compare=false ：获取本页统计信息&lt;/li&gt;
 &lt;li&gt;两个预检：由于CORS，请求源和被请求源不一致，这是浏览器自带的安全策略，实际顺序为 先预检（我不属于你？我能不能访问你？） - 再fetch（我允许你，访问吧） 。题外话：为什么需要预检？因为浏览器要确保该请求是对方明确允许的，而不是恶意网站强行访问的，否则会触发 &lt;strong&gt;CSRF&lt;/strong&gt; 攻击，也就是对端源安全策略过于宽松，导致谁都能拿到信息，这些信息可能是敏感的（如登录Token，用户名与密码等）&lt;/li&gt;
 &lt;li&gt;https://api-gateway.umami.dev/api/send ：Umami的官方JS，用于将本次访问的行为汇报给Umami&lt;/li&gt;
 &lt;/ul&gt;
@@ -1631,7 +1631,7 @@ pip install oci requests
 </content:encoded></item><item><title>公开架构，我的二次元随机图API是怎么做的</title><link>https://acofork.com/posts/acg-randompic-api/</link><guid isPermaLink="true">https://acofork.com/posts/acg-randompic-api/</guid><description>发现很多小伙伴也想搭建一个自己的随机图API，这里我就公开一下我的架构，打磨2年了，供大家参考~</description><pubDate>Sat, 06 Sep 2025 02:22:00 GMT</pubDate><content:encoded>&lt;h1&gt;API端点&lt;/h1&gt;
 &lt;p&gt;&lt;s&gt;门户： https://pic.072103.xyz&lt;/s&gt;&lt;/p&gt;
 &lt;p&gt;&lt;s&gt;门户里面的API端点： https://hpic.072103.xyz https://vpic.072103.xyz （CF Worker）&lt;/s&gt;&lt;/p&gt;
-&lt;p&gt;博客用的API端点： https://eopfapi.2b2x.cn/pic?img=ua （EdgeOne Pages Functions）&lt;/p&gt;
+&lt;p&gt;博客用的API端点： https://eopfapi.acofork.com/pic?img=ua （EdgeOne Pages Functions）&lt;/p&gt;
 &lt;h1&gt;新版实现&lt;/h1&gt;
 &lt;p&gt;图源存放EdgeOne Page，EdgeOne Pages Functions作为入口，当收到请求后首先区分 横屏、竖屏、自适应，即 &lt;code&gt;?img=h&lt;/code&gt; &lt;code&gt;?img=v&lt;/code&gt; &lt;code&gt;?img=ua&lt;/code&gt; ，随后返回其内部存储的相应图片，关于更多详情，请参考源码： &lt;a href=&quot;https://github.com/afoim/EdgeOne_Function_PicAPI/blob/main/functions/pic.js&quot;&gt;EdgeOne_Function_PicAPI/functions/pic.js at main · afoim/EdgeOne_Function_PicAPI&lt;/a&gt;&lt;/p&gt;
 &lt;h1&gt;旧版实现&lt;/h1&gt;
@@ -1643,7 +1643,7 @@ pip install oci requests
 &lt;p&gt;图源全部存在 &lt;strong&gt;Cloudflare R2&lt;/strong&gt;，全部采用 &lt;strong&gt;Webp&lt;/strong&gt; 格式，仅分类为 &lt;strong&gt;横屏、竖屏&lt;/strong&gt; ，如图&lt;/p&gt;
 &lt;p&gt;&lt;img src=&quot;https://acofork.com/_astro/2025-08-31-04-13-08-image.CQ_Xo6cU_Z19uHDO.webp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&quot;https://acofork.com/_astro/2025-08-31-04-13-17-image.DJLoqL7l_pXlsd.webp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
-&lt;p&gt;API就拿我正投入使用的 https://eopfapi.2b2x.cn/pic?img=ua 来说&lt;/p&gt;
+&lt;p&gt;API就拿我正投入使用的 https://eopfapi.acofork.com/pic?img=ua 来说&lt;/p&gt;
 &lt;p&gt;看域名也可以看出来，这是一个 &lt;strong&gt;EdgeOne Pages Functions&lt;/strong&gt; 服务（下文简称 &lt;strong&gt;eopf&lt;/strong&gt; ），什么？你问为什么用这个？那当然是因为！ &lt;strong&gt;目前所有功能完全免费！&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img src=&quot;https://acofork.com/_astro/2025-08-31-04-18-45-image.BXXhv1XP_ZYQMb5.webp&quot; alt=&quot;&quot; /&gt;&lt;/p&gt;
 &lt;p&gt;源码在 &lt;a href=&quot;https://github.com/afoim/EdgeOne_Function_PicAPI&quot;&gt;afoim/EdgeOne_Function_PicAPI: 适用于EdgeOne边缘函数的随机图API&lt;/a&gt;&lt;/p&gt;
